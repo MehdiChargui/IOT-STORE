@@ -15,7 +15,8 @@ export class PageAboutUsComponent implements OnInit {
     ) { }
     ngOnInit(): void {
         this.userService.getSettings().subscribe(data=>{
-            this.settings=data
+            this.settings=data[0]
+            console.log(data)
         })
     }
 }
