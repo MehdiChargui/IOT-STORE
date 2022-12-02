@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: service-customer-write
+    labels:
+        app: service-customer-write
+spec:
+    replicas: 1
+    selector:
+        matchLabels:
+            app: service-customer-write
+    template:
+        metadata:
+            labels:
+                app: service-customer-write
+        spec:
+            containers:
+            - name: service-customer-write
+              image: service-customer-write
+              imagePullPolicy: Never
+              ports:
+              - containerPort: 8103
+              env:
+              - name: host-service-config
+                valueFrom:
+                    configMapKeyRef:
+                        name: sconfig-configmap
+                        key: serviceconfig-url
+              - name: host-eureka
+                valueFrom:
+                    configMapKeyRef:
+                        name: seureka-configmap
+                        key: serviceeureka-url
+              - name: host-axonserver
+                valueFrom:
+                    configMapKeyRef:
+                        name: saxon-configmap
+                        key: saxon-url
+---
+apiVersion: v1
+kind: Service
+metadata:
+    name: service-customer-write
+spec:
+    selector:
+        app: service-customer-write
+    ports:
+        - protocol: TCP
+          port: 8103
+          targetPort: 8103
+             

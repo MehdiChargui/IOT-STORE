@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+    name: seureka-configmap
+    #namespace: my-app
+data:
+    serviceeureka-url: service-register

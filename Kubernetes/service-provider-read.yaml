@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: service-provider-read
+    labels:
+        app: service-provider-read
+spec:
+    replicas: 1
+    selector:
+        matchLabels:
+            app: service-provider-read
+    template:
+        metadata:
+            labels:
+                app: service-provider-read
+        spec:
+            containers:
+            - name: service-provider-read
+              image: service-provider-read
+              imagePullPolicy: Never
+              ports:
+              - containerPort: 8100
+              env:
+              - name: host-service-config
+                valueFrom:
+                    configMapKeyRef:
+                        name: sconfig-configmap
+                        key: serviceconfig-url
+              - name: host-eureka
+                valueFrom:
+                    configMapKeyRef:
+                        name: seureka-configmap
+                        key: serviceeureka-url
+              - name: host-axonserver
+                valueFrom:
+                    configMapKeyRef:
+                        name: saxon-configmap
+                        key: saxon-url
+              - name: host-mongodb
+                valueFrom:
+                    configMapKeyRef:
+                        name: mongo-providerdb-configmap
+                        key: database-url           
+---
+apiVersion: v1
+kind: Service
+metadata:
+    name: service-provider-read
+spec:
+    selector:
+        app: service-provider-read
+    ports:
+        - protocol: TCP
+          port: 8100
+          targetPort: 8100
+             

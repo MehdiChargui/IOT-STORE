@@ -1,9 +1,11 @@
+require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
 const url = require('./config/database.config.js');
 const mongoose = require('mongoose');
 const client = require('./config/eureka')
 const compression = require('compression')
+const portserver = process.env.PORTSERVER;
 
 /*  Connecting to Eureka  */
 client.start(function(error){
@@ -39,6 +41,6 @@ app.get('/', (req, res) => {
 app.use(compression())
 require('./routes/routes.messaging')(app);
 // listen for requests
-app.listen(4004, () => {
-    console.log("Server is listening on port 4004");
+app.listen(portserver, () => {
+    console.log(`Server is listening on port ${portserver}`);
 });

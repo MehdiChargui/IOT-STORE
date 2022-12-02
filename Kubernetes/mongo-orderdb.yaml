@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: mongodb-order
+    #namespace: my-app
+    labels:
+        app: mongodb-order
+spec:
+    replicas: 1
+    selector:
+        matchLabels:
+            app: mongodb-order
+    template:
+        metadata:
+            labels:
+                app: mongodb-order
+        spec:
+            containers:
+            - name: mongodb-order
+              image: mongo
+              ports:
+              - containerPort: 27017
+              #env:
+              #- name: MONGO_INITDB_ROOT_USERNAME
+                #valueFrom:
+                    #secretKeyRef:
+                        #name: mongodb-secret
+                        #key: mongo-root-username
+              #- name: MONGO_INITDB_ROOT_PASSWORD
+                #valueFrom:
+                    #secretKeyRef:
+                        #name: mongodb-secret
+                        #key: mongo-root-password
+---
+apiVersion: v1
+kind: Service
+metadata:
+    name: mongodb-order
+    #namespace: my-app
+spec:
+    selector:
+        app: mongodb-order
+    ports:
+        - protocol: TCP
+          port: 27024
+          targetPort: 27017

@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: service-deliverymethod-write
+    labels:
+        app: service-deliverymethod-write
+spec:
+    replicas: 1
+    selector:
+        matchLabels:
+            app: service-deliverymethod-write
+    template:
+        metadata:
+            labels:
+                app: service-deliverymethod-write
+        spec:
+            containers:
+            - name: service-deliverymethod-write
+              image: service-deliverymethod-write
+              imagePullPolicy: Never
+              ports:
+              - containerPort: 8093
+              env:
+              - name: host-service-config
+                valueFrom:
+                    configMapKeyRef:
+                        name: sconfig-configmap
+                        key: serviceconfig-url
+              - name: host-eureka
+                valueFrom:
+                    configMapKeyRef:
+                        name: seureka-configmap
+                        key: serviceeureka-url
+              - name: host-axonserver
+                valueFrom:
+                    configMapKeyRef:
+                        name: saxon-configmap
+                        key: saxon-url
+---
+apiVersion: v1
+kind: Service
+metadata:
+    name: service-deliverymethod-write
+spec:
+    selector:
+        app: service-deliverymethod-write
+    ports:
+        - protocol: TCP
+          port: 8093
+          targetPort: 8093
+             

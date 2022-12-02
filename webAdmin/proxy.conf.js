@@ -19,7 +19,7 @@ const proxyConfig = [
     context: '/ms',
     pathRewrite: { '^/ms': '' },
     //target: 'http://35.180.206.6:9004',
-    target: 'http://localhost:9004',
+    target: 'http://192.168.59.120:30043',
     changeOrigin: true,
     secure: false
   }

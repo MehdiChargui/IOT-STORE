@@ -1,15 +1,20 @@
 
+require('dotenv').config();
 const Eureka = require('eureka-js-client').Eureka;
+const ip = require('ip');
+const portserver = process.env.PORTSERVER;
+const porteureka = process.env.PORTEUREKA;
+const hosteureka = process.env.HOSTEUREKA;
 
 const client = new Eureka({
   instance: {
     instanceId: 'MARKETMESSAGINGSERVICE',
     app: 'MARKETMESSAGINGSERVICE',
-    hostName: 'localhost',
-    ipAddr: 'localhost',
-    statusPageUrl: 'http://localhost:4004',
+    hostName: ip.address(),
+    ipAddr: ip.address(),
+    statusPageUrl: `http://`+ip.address()+`:${portserver}`,
     port: {
-      '$': 4004,
+      '$': portserver,
       '@enabled': 'true',
     },
     vipAddress: 'MARKETMESSAGINGSERVICE',
@@ -21,9 +26,8 @@ const client = new Eureka({
     fetchRegistry: true,
   },
   eureka: {
-    //host: 'market-eureka-service',
-    host:'localhost',
-    port: 8761,
+    host: hosteureka,
+    port: porteureka,
     servicePath: '/eureka/apps/',
   }
 });

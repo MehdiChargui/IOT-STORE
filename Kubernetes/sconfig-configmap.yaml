@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+    name: sconfig-configmap
+    #namespace: my-app
+data:
+    serviceconfig-url: service-config

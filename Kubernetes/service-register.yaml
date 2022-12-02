@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: service-register
+    #namespace: my-app
+    labels:
+        app: service-register
+spec:
+    replicas: 1
+    selector:
+        matchLabels:
+            app: service-register
+    template:
+        metadata:
+            labels:
+                app: service-register
+        spec:
+            containers:
+            - name: service-register
+              image: service-register
+              imagePullPolicy: Never
+              ports:
+              - containerPort: 8761
+              env:
+              - name: host-service-config
+                valueFrom:
+                    configMapKeyRef:
+                        name: sconfig-configmap
+                        key: serviceconfig-url
+---
+apiVersion: v1
+kind: Service
+metadata:
+    name: service-register
+    #namespace: my-app
+spec:
+    selector:
+        app: service-register
+    type: NodePort
+    ports:
+        - protocol: TCP
+          port: 8761
+          targetPort: 8761
+          nodePort: 30033

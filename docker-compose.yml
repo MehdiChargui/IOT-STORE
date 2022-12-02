@@ -1,0 +1,27 @@
+version: '3'
+services:
+  service-config:
+    image: service-config
+    ports:
+      - "8888:8888"
+    
+  
+  service-register:
+    depends_on:
+      - service-config
+    command: ["wait-for-it.sh", "service-config:8888"]
+    image: service-register
+    ports:
+      - "8761:8761"
+    environment:
+      - host-service-config=service-config
+      
+  service-gateway:
+    depends_on:
+      - service-register
+    command: ["wait-for-it.sh", "service-register:8761"]
+    image: service-gateway
+    ports:
+      - "9004:9004"
+    environment:
+      - host-eureka=service-register  

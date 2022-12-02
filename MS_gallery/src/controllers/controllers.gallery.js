@@ -1,8 +1,11 @@
 const Image = require('../models/models.gallery');
 var fs = require('fs');
+require('dotenv').config();
 var s3 = require('../config/aws');
 const { response } = require('express');
 const BUCKET = 'tunisie-accas'
+const portserver = process.env.PORTSERVER;
+
 // Upload Image
 exports.upload = (req, res) => {
     //res.status(200).json(url: "http://localhost:4005/" + imageNamereq.file.filename);
@@ -14,7 +17,7 @@ exports.upload = (req, res) => {
         });
     }else{
         try {
-            var url = "http://localhost:4005/"+req.file.filename
+            var url = `http://localhost:${portserver}`+req.file.filename
             res.status(200).send(url)
        } catch (error) {
            res.sendStatus(500).send({

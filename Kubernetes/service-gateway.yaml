@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: service-gateway
+    #namespace: my-app
+    labels:
+        app: service-gateway
+spec:
+    replicas: 1
+    selector:
+        matchLabels:
+            app: service-gateway
+    template:
+        metadata:
+            labels:
+                app: service-gateway
+        spec:
+            containers:
+            - name: service-gateway
+              image: service-gateway
+              imagePullPolicy: Never
+              ports:
+              - containerPort: 9004
+              env:
+              - name: host-eureka
+                valueFrom:
+                    configMapKeyRef:
+                        name: seureka-configmap
+                        key: serviceeureka-url
+---
+apiVersion: v1
+kind: Service
+metadata:
+    name: service-gateway
+    #namespace: my-app
+spec:
+    selector:
+        app: service-gateway
+    type: NodePort
+    ports:
+        - protocol: TCP
+          port: 9004
+          targetPort: 9004
+          nodePort: 30043
+
+ 

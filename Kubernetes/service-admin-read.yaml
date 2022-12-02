@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: service-admin-read
+    labels:
+        app: service-admin-read
+spec:
+    replicas: 1
+    selector:
+        matchLabels:
+            app: service-admin-read
+    template:
+        metadata:
+            labels:
+                app: service-admin-read
+        spec:
+            containers:
+            - name: service-admin-read
+              image: service-admin-read
+              imagePullPolicy: Never
+              ports:
+              - containerPort: 8085
+              env:
+              - name: host-service-config
+                valueFrom:
+                    configMapKeyRef:
+                        name: sconfig-configmap
+                        key: serviceconfig-url
+              - name: host-eureka
+                valueFrom:
+                    configMapKeyRef:
+                        name: seureka-configmap
+                        key: serviceeureka-url
+              - name: host-axonserver
+                valueFrom:
+                    configMapKeyRef:
+                        name: saxon-configmap
+                        key: saxon-url
+              - name: host-mongodb
+                valueFrom:
+                    configMapKeyRef:
+                        name: mongo-admindb-configmap
+                        key: database-url
+              
+---
+apiVersion: v1
+kind: Service
+metadata:
+    name: service-admin-read
+spec:
+    selector:
+        app: service-admin-read
+    ports:
+        - protocol: TCP
+          port: 8085
+          targetPort: 8085
+             

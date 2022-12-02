@@ -7,5 +7,5 @@ EXPOSE 4005
 VOLUME app/log
 ADD wait-for-it.sh .
 RUN ["chmod", "+x", "wait-for-it.sh"]
-ENTRYPOINT ["./wait-for-it.sh", "market-eureka-service:8761", "--", "node" ]
+ENTRYPOINT ["./wait-for-it.sh", "service-register:8761", "--", "node" ]
 CMD [ "src/app.js" ]

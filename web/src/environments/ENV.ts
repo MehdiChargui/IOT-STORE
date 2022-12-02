@@ -4,7 +4,8 @@ export class Env {
   static getHost(): string {
     if (location.port == '4200' || location.port == '91') {
      // this.host = 'http://35.180.206.6:9004';
-      this.host = 'http://localhost:9004';
+     // this.host = 'http://localhost:9004';
+     this.host = 'http://192.168.76.6:9004';
 
     } else {
       if (location.hostname.includes('preprod')) {

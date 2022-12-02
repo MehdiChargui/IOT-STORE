@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+    name: mongo-categorydb-configmap
+    #namespace: my-app
+data:
+    database-url: mongodb-category

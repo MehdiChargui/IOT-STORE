@@ -1,15 +1,17 @@
 const express = require('express');
+require('dotenv').config();
 const bodyParser = require('body-parser');
 const url = require('./config/database.config.js');
 const mongoose = require('mongoose');
-const client = require('./config/eureka')
-const compression = require('compression')
+const client = require('./config/eureka');
+const compression = require('compression');
+const portserver = process.env.PORTSERVER;
 
-/*  Connecting to Eureka  */
+  //Connecting to Eureka  
 client.start(function(error){
   console.log('start')
   console.log(error || 'complete');
-}); 
+});
 mongoose.Promise = global.Promise;
 mongoose.set('useCreateIndex', true);
 // Connecting to the database
@@ -30,7 +32,7 @@ app.use(bodyParser.urlencoded({ extended: true }))
 
 // parse requests of content-type - application/json
 app.use(bodyParser.json())
-// app.use(cors());
+//app.use(cors());
 
 // define a simple route
 app.get('/', (req, res) => {
@@ -41,6 +43,6 @@ app.use(express.static("uploads"));
 app.use(compression())
 require('./routes/routes.gallery')(app);
 // listen for requests
-app.listen(4005, () => {
-    console.log("Server is listening on port 4005");
+app.listen(portserver, () => {
+    console.log(`Server is listening on port ${portserver}`);
 });

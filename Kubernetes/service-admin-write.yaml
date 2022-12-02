@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: service-admin-write
+    labels:
+        app: service-admin-write
+spec:
+    replicas: 1
+    selector:
+        matchLabels:
+            app: service-admin-write
+    template:
+        metadata:
+            labels:
+                app: service-admin-write
+        spec:
+            containers:
+            - name: service-admin-write
+              image: service-admin-write
+              imagePullPolicy: Never
+              ports:
+              - containerPort: 8086
+              env:
+              - name: host-service-config
+                valueFrom:
+                    configMapKeyRef:
+                        name: sconfig-configmap
+                        key: serviceconfig-url
+              - name: host-eureka
+                valueFrom:
+                    configMapKeyRef:
+                        name: seureka-configmap
+                        key: serviceeureka-url
+              - name: host-axonserver
+                valueFrom:
+                    configMapKeyRef:
+                        name: saxon-configmap
+                        key: saxon-url
+---
+apiVersion: v1
+kind: Service
+metadata:
+    name: service-admin-write
+spec:
+    selector:
+        app: service-admin-write
+    ports:
+        - protocol: TCP
+          port: 8086
+          targetPort: 8086
+             

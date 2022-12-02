@@ -15,4 +15,5 @@ public class GatewayConfig {
 
         return new DiscoveryClientRouteDefinitionLocator(reactiveDiscoveryClient,discoveryLocatorProperties);
     }
+    
 }

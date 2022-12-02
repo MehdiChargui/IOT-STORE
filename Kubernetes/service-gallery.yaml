@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: service-gallery
+    labels:
+        app: service-gallery
+spec:
+    replicas: 1
+    selector:
+        matchLabels:
+            app: service-gallery
+    template:
+        metadata:
+            labels:
+                app: service-gallery
+        spec:
+            containers:
+            - name: service-gallery
+              image: service-gallery
+              imagePullPolicy: Never
+              ports:
+              - containerPort: 4005
+              env:
+              - name: PORTSERVER
+                value: '4005' 
+              - name: PORTEUREKA
+                value: '8761'
+              - name: PORTMONGODB
+                value: '27029'
+              - name: HOSTEUREKA
+                valueFrom:
+                    configMapKeyRef:
+                        name: seureka-configmap
+                        key: serviceeureka-url
+              - name: HOSTMONGODB
+                valueFrom:
+                    configMapKeyRef:
+                        name: mongo-gallerydb-configmap
+                        key: database-url           
+---
+apiVersion: v1
+kind: Service
+metadata:
+    name: service-gallery
+spec:
+    selector:
+        app: service-gallery
+    ports:
+        - protocol: TCP
+          port: 4005
+          targetPort: 4005

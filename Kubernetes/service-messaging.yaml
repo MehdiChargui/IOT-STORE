@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: service-messaging
+    labels:
+        app: service-messaging
+spec:
+    replicas: 1
+    selector:
+        matchLabels:
+            app: service-messaging
+    template:
+        metadata:
+            labels:
+                app: service-messaging
+        spec:
+            containers:
+            - name: service-messaging
+              image: service-messaging
+              imagePullPolicy: Never
+              ports:
+              - containerPort: 4004
+              env:
+              - name: PORTSERVER
+                value: '4004'
+              - name: PORTEUREKA
+                value: '8761'
+              - name: PORTMONGODB
+                value: '27030'
+              - name: HOSTEUREKA
+                valueFrom:
+                    configMapKeyRef:
+                        name: seureka-configmap
+                        key: serviceeureka-url
+              - name: HOSTMONGODB
+                valueFrom:
+                    configMapKeyRef:
+                        name: mongo-messagingdb-configmap
+                        key: database-url           
+---
+apiVersion: v1
+kind: Service
+metadata:
+    name: service-messaging
+spec:
+    selector:
+        app: service-messaging
+    ports:
+        - protocol: TCP
+          port: 4004
+          targetPort: 4004
+             

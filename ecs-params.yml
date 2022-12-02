@@ -1,0 +1,28 @@
+version: 1
+task_definition:
+  task_execution_role: ecsTaskExecutionRole
+  ecs_network_mode: awsvpc
+  task_size:
+    mem_limit: 8GB
+    cpu_limit: 4096
+  services:
+    service-config : 
+      essential : false
+    service-register:
+      essential : false
+      depends_on:
+        - container_name: service-config
+          condition : "START"
+      startTimeout : 240
+    service-gateway:
+      depends_on:
+        - container_name: service-register
+          condition : "START"
+run_params:
+  network_configuration:
+    awsvpc_configuration:
+      subnets:
+        - "subnet-01fcfd5c08401bfa2"
+      security_groups:
+        - "sg-0c264b740115c2cfc"
+      assign_public_ip: ENABLED

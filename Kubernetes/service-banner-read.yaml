@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: service-banner-read
+    labels:
+        app: service-banner-read
+spec:
+    replicas: 1
+    selector:
+        matchLabels:
+            app: service-banner-read
+    template:
+        metadata:
+            labels:
+                app: service-banner-read
+        spec:
+            containers:
+            - name: service-banner-read
+              image: service-banner-read
+              imagePullPolicy: Never
+              ports:
+              - containerPort: 8090
+              env:
+              - name: host-service-config
+                valueFrom:
+                    configMapKeyRef:
+                        name: sconfig-configmap
+                        key: serviceconfig-url
+              - name: host-eureka
+                valueFrom:
+                    configMapKeyRef:
+                        name: seureka-configmap
+                        key: serviceeureka-url
+              - name: host-axonserver
+                valueFrom:
+                    configMapKeyRef:
+                        name: saxon-configmap
+                        key: saxon-url
+              - name: host-mongodb
+                valueFrom:
+                    configMapKeyRef:
+                        name: mongo-bannerdb-configmap
+                        key: database-url
+              
+---
+apiVersion: v1
+kind: Service
+metadata:
+    name: service-banner-read
+spec:
+    selector:
+        app: service-banner-read
+    ports:
+        - protocol: TCP
+          port: 8090
+          targetPort: 8090
+             

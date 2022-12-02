@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+    name: saxon-configmap
+    #namespace: my-app
+data:
+    saxon-url: axondb

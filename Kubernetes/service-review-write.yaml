@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: service-review-write
+    labels:
+        app: service-review-write
+spec:
+    replicas: 1
+    selector:
+        matchLabels:
+            app: service-review-write
+    template:
+        metadata:
+            labels:
+                app: service-review-write
+        spec:
+            containers:
+            - name: service-review-write
+              image: service-review-write
+              imagePullPolicy: Never
+              ports:
+              - containerPort: 8101
+              env:
+              - name: host-service-config
+                valueFrom:
+                    configMapKeyRef:
+                        name: sconfig-configmap
+                        key: serviceconfig-url
+              - name: host-eureka
+                valueFrom:
+                    configMapKeyRef:
+                        name: seureka-configmap
+                        key: serviceeureka-url
+              - name: host-axonserver
+                valueFrom:
+                    configMapKeyRef:
+                        name: saxon-configmap
+                        key: saxon-url
+---
+apiVersion: v1
+kind: Service
+metadata:
+    name: service-review-write
+spec:
+    selector:
+        app: service-review-write
+    ports:
+        - protocol: TCP
+          port: 8101
+          targetPort: 8101
+             
